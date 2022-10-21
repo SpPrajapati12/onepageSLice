@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "userName": "Sandip",
+      "phone": "1325235623465",
+      "email": "123sandip@gmdf.com",
+      "id": 1
+    },
+    {
+      "userName": "sp2",
+      "phone": "35325235",
+      "email": "123@gmdf.com",
+      "id": 2
+    }
+  ]
+}

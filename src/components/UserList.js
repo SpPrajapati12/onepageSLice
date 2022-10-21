@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllUsersById } from './redux/user';
-import { deleteUser, getAllUsers, addUser, updateUser } from './redux/users';
+import { deleteUser, getAllUsers, addUser, updateUser, hideshow } from './redux/users';
 
 const UserList = () => {
   const { id } = useParams()
   const users = useSelector((state) => state.users.users)
   const user = useSelector((state) => state.user.user)
+  const hide = useSelector((state) => state.users.hide)
+  console.log(hide);
   // const { userName, email, phone } = user
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -22,26 +24,27 @@ const UserList = () => {
     if (id) {
       dispatch(getAllUsersById(id))
     }
-  }, [dispatch,navigate])
+  }, [dispatch, navigate])
 
 
   useEffect(() => {
     if (user) {
-      setValues({...user });
+      setValues({ ...user });
     }
   }, [user]);
 
-  const { userName, phone, email } = values;
+  // const { userName, phone, email } = values;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!id) {
+    if (!id) {
       dispatch(addUser({ ...values }));
       setValues({
         userName: "",
         phone: "",
         email: "",
       });
+      dispatch(hideshow(false))
       navigate('/')
     } else {
       dispatch(
@@ -57,8 +60,10 @@ const UserList = () => {
         phone: "",
         email: "",
       });
+      dispatch(hideshow(false))
       window.alert("user successfully Edit");
       navigate("/")
+
     }
   };
 
@@ -75,7 +80,8 @@ const UserList = () => {
 
   return (
     <div>
-      <div className="container">
+      {!hide && <button className="btn btn-primary m-5" onClick={() => dispatch(hideshow(true))}>+</button>}
+      {hide && <div className="container">
         <h1>
           {id ? "Edit User" : "Add User"}
         </h1>
@@ -119,7 +125,15 @@ const UserList = () => {
           Back
         </button> */}
           {/* <Link to="/"> */}
-          <button type="submit" className="btn btn-primary m-2" onClick={() => navigate("/")}>
+          <button type="button" className="btn btn-primary m-2" onClick={() => {
+            navigate("/")
+            dispatch(hideshow(false))
+            setValues({
+              userName: "",
+              phone: "",
+              email: "",
+            });
+          }}>
             cancel
           </button>
           <button type="submit" className="btn btn-success m-2">
@@ -127,7 +141,7 @@ const UserList = () => {
           </button>
           {/* </Link> */}
         </form>
-      </div>
+      </div>}
       <div className="container">
         <table className="table">
           <thead className="thead-dark">
@@ -151,7 +165,11 @@ const UserList = () => {
                     <button
                       type="button"
                       className="btn btn-warning mr-4"
-                      onClick={() => navigate(`/edit/${i.id}`)}
+                      onClick={() => {
+                        navigate(`/edit/${i.id}`)
+                        dispatch(hideshow(true))
+                      }
+                      }
                     >
                       Edit
                     </button>

@@ -21,46 +21,50 @@ export const updateUser = createAsyncThunk("user/update_By_Id", async ({id, user
 
 const initialState = {
   users: [],
-  user : []
+  hide : false
 }
 
 const users = createSlice({
   name: "users",
   initialState,
   reducers: {
+    hideshow (state,action) {
+      state.hide = action.payload
+    }
   },
   extraReducers: {
-    [getAllUsers.pending]: (state) => {
-      state.loading = true;
-    },
+    // [getAllUsers.pending]: (state) => {
+    //   state.loading = true;
+    // },
     [getAllUsers.fulfilled]: (state, action) => {
       return { ...state, users: action.payload };
     },
-    [getAllUsers.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    [deleteUser.pending]: (state) => {
-      state.loading = true;
-    },
+    // [getAllUsers.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    // },
+    // [deleteUser.pending]: (state) => {
+    //   state.loading = true;
+    // },
     [deleteUser.fulfilled]: (state, action) => {
       console.log("delete Successfully!");
-      let index = state.users.findIndex(({ id }) => id === action.payload.id);
-      state.users.splice(index, 1);
+      // let index = state.users.findIndex(({ id }) => id === action.payload.id);
+      // state.users.splice(index, 1);
+      state.user = state.users.filter((i) => i.id !== action.payload.id)
     },
-    [deleteUser.rejected]: (state, action) => {
-      state.loading = false;
-    },
+    // [deleteUser.rejected]: (state, action) => {
+    //   state.loading = false;
+    // },
 
     [addUser.fulfilled]: (state, action) => {
       state.users.push(action.payload);
     },
-    [addUser.rejected]: (state) => {
-      state.loading = false;
-    },
-    [updateUser.pending]: (state, action) => {
-      state.loading = true;
-    },
+    // [addUser.rejected]: (state) => {
+    //   state.loading = false;
+    // },
+    // [updateUser.pending]: (state, action) => {
+    //   state.loading = true;
+    // },
     [updateUser.fulfilled]: (state, action) => {
       state.loading = false;
       const index = state.users.findIndex(tutorial => tutorial.id === action.payload.id);
@@ -69,11 +73,11 @@ const users = createSlice({
         ...action.payload,
       };
     },
-    [updateUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+    // [updateUser.rejected]: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    // },
   },
 });
-
+export const {hideshow} = users.actions
 export default users.reducer
